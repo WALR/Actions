@@ -27,55 +27,45 @@ class CasaController extends Controller
             'color_id' => 'required',
         ]);
 
-        // dd($request);
 
         casa::create($request->all());
         return redirect()->route('casa.index')
                         ->with('success','Casa creada!');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
-        //
+        $casa = casa::find($id);
+        return view('casas.show',compact('casa'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit($id)
     {
-        //
+        $casa = casa::find($id);
+        $colores = colores::pluck('nombre', 'id');
+        return view('casas.edit',compact('casa', 'colores'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, $id)
     {
-        //
+
+        $this->validate($request, [
+            'nombre' => 'required',
+            'color_id' => 'required',
+        ]);
+
+        casa::find($id)->update($request->all());
+        return redirect()->route('casa.index')
+                        ->with('success','Casa Editada!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        //
+        casa::find($id)->delete();
+        return redirect()->route('casa.index')
+                        ->with('success','Casa Eliminada!');
     }
 }
